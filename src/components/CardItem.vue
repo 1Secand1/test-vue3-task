@@ -57,11 +57,12 @@
           variant="tonal"
           class="sort-btn"
           color="blue"
-          @click="sortList" />
+          @click="$emit('sorting')" />
       </template>
     </v-tooltip>
 
     <img :src="props.card.image" alt="изображение товара" />
+
     <div class="info">
       <p><b>ID</b>: {{ props.card.id }}</p>
       <p><b>Название</b>: {{ props.card.title }}</p>
@@ -73,6 +74,7 @@
       <p><b>Цена</b>: {{ props.card.price }}</p>
       <p><b>Рейтинг</b>: {{ props.card.rating ? props.card.rating.rate : 0 }}</p>
     </div>
+    
     <CardForm
       title="Редактирование карточки"
       v-model="isEditCardDialogOpen"
@@ -109,10 +111,14 @@
   const secondList = inject('secondList');
   const lastList = inject('lastList');
 
+  console.log(firstList,secondList,lastList)
+
   const props = defineProps({
     card: {},
     options: {},
   });
+
+  const emits = defineEmits(['sorting'])
 
   const borderColor = computed(() => {
     return props.options.id === 1 ? 'blue' : props.options.id === 2 ? 'yellow' : 'pink';
@@ -141,6 +147,7 @@
     isEditCardDialogOpen.value = false;
     //По готовности бекенда добавить сохранение на сервер
   }
+
   function toNextList() {
     getLocalCards();
     if (cards.value === firstList.value) {
@@ -163,10 +170,6 @@
     }
   }
 
-  function sortList() {
-    getLocalCards();
-    cards = cards.value.sort((a, b) => b.rating.rate - a.rating.rate);
-  }
 </script>
 
 <style lang="scss" scoped>
